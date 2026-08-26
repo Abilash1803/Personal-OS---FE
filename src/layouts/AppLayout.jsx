@@ -27,7 +27,7 @@ export const AppLayout = () => {
 
   return (
     <ErrorBoundary>
-      <div className="flex min-h-screen bg-slate-50 font-sans text-[#0F172A] antialiased selection:bg-blue-100 selection:text-blue-900 pt-[env(safe-area-inset-top)]">
+      <div className="flex min-h-[100dvh] bg-slate-50 font-sans text-[#0F172A] antialiased selection:bg-blue-100 selection:text-blue-900 pt-[env(safe-area-inset-top)]">
         {/* Desktop Sidebar (Hidden on mobile) */}
         <Sidebar
           isMobileOpen={isMobileOpen}
@@ -35,7 +35,7 @@ export const AppLayout = () => {
         />
 
         {/* Main Viewport Container */}
-        <div className="flex-1 flex flex-col min-w-0 min-h-screen">
+        <div className="flex-1 flex flex-col min-w-0 min-h-[100dvh]">
           {/* Desktop Navbar (≥ 768px) */}
           <Navbar onOpenCommandPalette={commandPalette.openPalette} />
 
