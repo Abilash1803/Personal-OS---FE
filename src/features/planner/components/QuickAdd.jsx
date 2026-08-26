@@ -1,25 +1,35 @@
 import { useState } from 'react';
 import { Button } from '../../../components/ui/Button';
+import { useToast } from '../../../hooks/useToast';
 import { Plus, X } from 'lucide-react';
 
-export const QuickAdd = ({ selectedDate, onAddEvent }) => {
+export const QuickAdd = ({ selectedDate, onAddEvent, onCreateEvent }) => {
+  const { addToast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [time, setTime] = useState('');
   const [type, setType] = useState('Meeting');
   const [description, setDescription] = useState('');
 
+  const handleAdd = onAddEvent || onCreateEvent;
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!title.trim()) return;
+    if (!title.trim()) {
+      addToast('Please enter an event title', 'warning');
+      return;
+    }
 
-    onAddEvent({
-      title: title.trim(),
-      date: selectedDate,
-      time: time || '',
-      type,
-      description: description.trim(),
-    });
+    if (typeof handleAdd === 'function') {
+      handleAdd({
+        title: title.trim(),
+        date: selectedDate,
+        time: time || '',
+        type,
+        description: description.trim(),
+      });
+      addToast('Event added to planner', 'success');
+    }
 
     setTitle('');
     setTime('');
@@ -48,7 +58,7 @@ export const QuickAdd = ({ selectedDate, onAddEvent }) => {
         <button
           type="button"
           onClick={() => setIsOpen(false)}
-          className="text-slate-400 hover:text-slate-700"
+          className="text-slate-400 hover:text-slate-700 p-1 rounded-lg hover:bg-slate-200/60"
         >
           <X className="w-4 h-4" />
         </button>
