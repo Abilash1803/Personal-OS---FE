@@ -38,7 +38,8 @@ export const syncService = {
         sort_order: item.order || 1,
         created_at: item.createdAt || new Date().toISOString(),
       }));
-      await supabase.from('life_areas').upsert(payload);
+      const { error } = await supabase.from('life_areas').upsert(payload);
+      if (error) throw new Error(`Life Areas sync error: ${error.message}`);
     }
 
     // 2. Goals
@@ -53,7 +54,8 @@ export const syncService = {
         is_active: item.isActive ?? true,
         created_at: item.createdAt || new Date().toISOString(),
       }));
-      await supabase.from('goals').upsert(payload);
+      const { error } = await supabase.from('goals').upsert(payload);
+      if (error) throw new Error(`Goals sync error: ${error.message}`);
     }
 
     // 3. Task Templates
@@ -70,7 +72,8 @@ export const syncService = {
         is_active: item.active ?? true,
         created_at: item.createdAt || new Date().toISOString(),
       }));
-      await supabase.from('task_templates').upsert(payload);
+      const { error } = await supabase.from('task_templates').upsert(payload);
+      if (error) throw new Error(`Task Templates sync error: ${error.message}`);
     }
 
     // 4. Daily Tasks
@@ -84,7 +87,8 @@ export const syncService = {
         completed_at: item.completedAt || null,
         created_at: item.createdAt || new Date().toISOString(),
       }));
-      await supabase.from('daily_tasks').upsert(payload);
+      const { error } = await supabase.from('daily_tasks').upsert(payload);
+      if (error) throw new Error(`Daily Tasks sync error: ${error.message}`);
     }
 
     // 5. Planner Events
@@ -102,7 +106,8 @@ export const syncService = {
         created_at: item.createdAt || new Date().toISOString(),
         updated_at: item.updatedAt || new Date().toISOString(),
       }));
-      await supabase.from('planner_events').upsert(payload);
+      const { error } = await supabase.from('planner_events').upsert(payload);
+      if (error) throw new Error(`Planner Events sync error: ${error.message}`);
     }
 
     // 6. Focus Sessions
@@ -119,7 +124,8 @@ export const syncService = {
         notes: item.notes || '',
         created_at: item.createdAt || new Date().toISOString(),
       }));
-      await supabase.from('focus_sessions').upsert(payload);
+      const { error } = await supabase.from('focus_sessions').upsert(payload);
+      if (error) throw new Error(`Focus Sessions sync error: ${error.message}`);
     }
 
     // 7. Daily Reflections
@@ -132,7 +138,8 @@ export const syncService = {
         created_at: item.createdAt || new Date().toISOString(),
         updated_at: item.updatedAt || new Date().toISOString(),
       }));
-      await supabase.from('daily_reflections').upsert(payload);
+      const { error } = await supabase.from('daily_reflections').upsert(payload);
+      if (error) throw new Error(`Daily Reflections sync error: ${error.message}`);
     }
 
     return { success: true, timestamp: new Date().toISOString() };

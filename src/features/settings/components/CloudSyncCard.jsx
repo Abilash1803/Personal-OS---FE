@@ -71,7 +71,7 @@ export const CloudSyncCard = () => {
           ) : status.connected ? (
             <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-              Connected (Project ngqhp)
+              Connected (Supabase Cloud)
             </span>
           ) : (
             <span className="flex items-center gap-1.5 text-xs font-semibold text-amber-700 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
