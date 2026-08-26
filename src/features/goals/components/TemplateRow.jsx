@@ -17,16 +17,16 @@ export const TemplateRow = ({
   return (
     <motion.div
       layout
-      className={`p-3.5 bg-white border border-[#E2E8F0] hover:border-slate-300 rounded-xl transition-all duration-200 flex items-center justify-between gap-3 group ${
+      className={`p-3 sm:p-3.5 bg-white border border-[#E2E8F0] hover:border-slate-300 rounded-xl transition-all duration-200 flex items-center justify-between gap-3 group ${
         !template.active ? 'opacity-50 bg-slate-50/50' : ''
       }`}
     >
-      <div className="flex items-center gap-3 min-w-0">
+      <div className="flex items-center gap-3 min-w-0 flex-1">
         {/* Active Toggle Switch */}
         <button
           type="button"
           onClick={() => onToggleActive(template.id)}
-          className={`w-9 h-5 rounded-full p-0.5 transition-colors relative focus:outline-none ${
+          className={`w-9 h-5 rounded-full p-0.5 transition-colors relative focus:outline-none shrink-0 ${
             template.active ? 'bg-blue-600' : 'bg-slate-300'
           }`}
           title={template.active ? 'Disable Template' : 'Enable Template'}
@@ -38,7 +38,7 @@ export const TemplateRow = ({
           />
         </button>
 
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="text-sm font-semibold text-[#0F172A] truncate">
             <InlineInput
               value={template.title}
@@ -47,10 +47,10 @@ export const TemplateRow = ({
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 text-[11px] text-[#64748B] mt-1">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11px] text-[#64748B] mt-1">
             <span className="flex items-center gap-1">
               <Clock className="w-3 h-3 text-slate-400" />
-              <span>{template.estimatedMinutes || 30} mins</span>
+              <span>{template.estimatedMinutes || 30}m</span>
             </span>
 
             <span>•</span>
@@ -63,11 +63,11 @@ export const TemplateRow = ({
             <span>•</span>
 
             <span
-              className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase border ${
+              className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] font-bold uppercase border ${
                 priorityColors[template.priority] || priorityColors.Medium
               }`}
             >
-              {template.priority} Priority
+              {template.priority}
             </span>
           </div>
         </div>
@@ -76,8 +76,9 @@ export const TemplateRow = ({
       <button
         type="button"
         onClick={() => onDelete(template.id)}
-        className="opacity-0 group-hover:opacity-100 p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+        className="p-1.5 sm:p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all opacity-80 group-hover:opacity-100 focus:opacity-100 shrink-0"
         title="Delete Task Template"
+        aria-label="Delete Task Template"
       >
         <Trash2 className="w-4 h-4" />
       </button>

@@ -15,15 +15,15 @@ export const LifeAreaCard = ({
     <motion.div
       whileHover={{ scale: 1.01 }}
       onClick={() => onSelect(lifeArea.id)}
-      className={`p-3.5 rounded-xl border transition-all duration-200 cursor-pointer flex items-center justify-between group ${
+      className={`p-3 sm:p-3.5 rounded-xl border transition-all duration-200 cursor-pointer flex items-center justify-between group gap-2 ${
         isSelected
           ? 'bg-blue-50/80 border-blue-500/80 shadow-xs'
           : 'bg-white border-[#E2E8F0] hover:border-slate-300 hover:bg-slate-50/60'
       }`}
     >
-      <div className="flex items-center gap-3 min-w-0">
+      <div className="flex items-center gap-3 min-w-0 flex-1">
         <span className="text-xl select-none shrink-0">{lifeArea.icon || '📌'}</span>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="text-sm font-semibold text-[#0F172A] truncate">
             <InlineInput
               value={lifeArea.name}
@@ -39,17 +39,18 @@ export const LifeAreaCard = ({
         </div>
       </div>
 
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1 shrink-0">
         <button
           type="button"
           onClick={(e) => {
             e.stopPropagation();
             onDelete(lifeArea.id);
           }}
-          className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+          className="p-1.5 sm:p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all opacity-80 group-hover:opacity-100 focus:opacity-100"
           title="Delete Life Area"
+          aria-label="Delete Life Area"
         >
-          <Trash2 className="w-3.5 h-3.5" />
+          <Trash2 className="w-4 h-4 text-slate-400 hover:text-rose-600" />
         </button>
         <ChevronRight
           className={`w-4 h-4 transition-transform ${

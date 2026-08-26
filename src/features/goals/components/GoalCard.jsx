@@ -17,7 +17,7 @@ export const GoalCard = ({
     <motion.div
       whileHover={{ scale: 1.01 }}
       onClick={() => onSelect(goal.id)}
-      className={`p-4 rounded-xl border transition-all duration-200 cursor-pointer flex flex-col justify-between gap-3 group ${
+      className={`p-3.5 sm:p-4 rounded-xl border transition-all duration-200 cursor-pointer flex flex-col justify-between gap-3 group ${
         isSelected
           ? 'bg-blue-50/80 border-blue-500/80 shadow-xs'
           : 'bg-white border-[#E2E8F0] hover:border-slate-300 hover:bg-slate-50/60'
@@ -25,8 +25,8 @@ export const GoalCard = ({
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <h3 className="text-sm font-bold text-[#0F172A] truncate">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h3 className="text-sm font-bold text-[#0F172A] truncate max-w-[200px]">
               <InlineInput
                 value={goal.title}
                 onSave={(newTitle) => onUpdate(goal.id, { title: newTitle })}
@@ -56,8 +56,9 @@ export const GoalCard = ({
               e.stopPropagation();
               onToggleArchive(goal.id);
             }}
-            className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-all"
+            className="p-1.5 sm:p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-all opacity-80 group-hover:opacity-100 focus:opacity-100"
             title={goal.isActive ? 'Archive Goal' : 'Activate Goal'}
+            aria-label="Archive Goal"
           >
             <Archive className="w-3.5 h-3.5" />
           </button>
@@ -68,8 +69,9 @@ export const GoalCard = ({
               e.stopPropagation();
               onDelete(goal.id);
             }}
-            className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+            className="p-1.5 sm:p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all opacity-80 group-hover:opacity-100 focus:opacity-100"
             title="Delete Goal"
+            aria-label="Delete Goal"
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>
