@@ -69,7 +69,7 @@ export const weeklyReviewService = {
       activeReviews.reduce((sum, r) => sum + r.score, 0) / activeReviews.length
     );
 
-    const completionRate = totalPlanned > 0 ? Math.round((totalCompleted / totalPlanned) * 100) : 85;
+    const completionRate = totalPlanned > 0 ? Math.round((totalCompleted / totalPlanned) * 100) : (totalCompleted > 0 ? 100 : 0);
 
     // Previous Week comparison (Subtract 7 days)
     const prevMonday = new Date(mondayDate);
@@ -89,7 +89,7 @@ export const weeklyReviewService = {
         'mins'
       ),
       plannerAccuracy: periodComparisonService.compareMetrics(
-        88,
+        completionRate,
         prevWeekReview.plannerAccuracy,
         '%'
       ),
@@ -139,7 +139,7 @@ export const weeklyReviewService = {
           totalFocusMinutes >= 60
             ? `${Math.floor(totalFocusMinutes / 60)}h ${totalFocusMinutes % 60}m`
             : `${totalFocusMinutes} mins`,
-        plannerAccuracy: 88,
+        plannerAccuracy: completionRate,
       },
       comparisons,
       bestDay,
@@ -152,12 +152,29 @@ export const weeklyReviewService = {
     };
   },
 
-  getWeeklyReviewRaw(_mondayStr) {
-    // Helper to fetch metrics for comparison without recursion
+  getWeeklyReviewRaw(mondayStr) {
+    const mondayDate = new Date(mondayStr);
+    const weekDates = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(mondayDate);
+      d.setDate(d.getDate() + i);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const dateNum = String(d.getDate()).padStart(2, '0');
+      weekDates.push(`${y}-${m}-${dateNum}`);
+    }
+
+    const reviews = weekDates.map((dStr) => dailyReviewService.getDailyReview(dStr));
+    const activeReviews = reviews.filter((r) => r.hasData);
+    const totalPlanned = activeReviews.reduce((sum, r) => sum + r.metrics.tasksPlanned, 0);
+    const totalCompleted = activeReviews.reduce((sum, r) => sum + r.metrics.tasksCompleted, 0);
+    const totalFocusMinutes = activeReviews.reduce((sum, r) => sum + r.metrics.totalFocusMinutes, 0);
+    const completionRate = totalPlanned > 0 ? Math.round((totalCompleted / totalPlanned) * 100) : (totalCompleted > 0 ? 100 : 0);
+
     return {
-      completionRate: 80,
-      totalFocusMinutes: 1200,
-      plannerAccuracy: 85,
+      completionRate,
+      totalFocusMinutes,
+      plannerAccuracy: completionRate,
     };
   },
 };
