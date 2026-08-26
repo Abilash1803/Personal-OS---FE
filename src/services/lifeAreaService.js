@@ -16,7 +16,7 @@ export const lifeAreaService = {
   async syncFromCloud() {
     try {
       const remoteAreas = await apiService.getLifeAreas();
-      if (Array.isArray(remoteAreas) && remoteAreas.length > 0) {
+      if (Array.isArray(remoteAreas)) {
         const formatted = remoteAreas.map((la) => ({
           id: la.id,
           name: la.name,
@@ -85,4 +85,3 @@ export const lifeAreaService = {
     return true;
   },
 };
-

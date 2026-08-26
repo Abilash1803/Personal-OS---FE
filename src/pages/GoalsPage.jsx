@@ -119,17 +119,24 @@ export const GoalsPage = () => {
               }
             />
             <div className="space-y-2">
-              {lifeAreas.map((la) => (
-                <LifeAreaCard
-                  key={la.id}
-                  lifeArea={la}
-                  isSelected={la.id === selectedLifeAreaId}
-                  onSelect={setSelectedLifeAreaId}
-                  onRename={(id, newName) => updateLifeArea(id, { name: newName })}
-                  onDelete={deleteLifeArea}
-                  goalCount={goals.filter((g) => g.lifeAreaId === la.id).length}
-                />
-              ))}
+              {lifeAreas.length === 0 ? (
+                <div className="p-4 text-center bg-slate-50/60 border border-dashed border-slate-200 rounded-xl space-y-1">
+                  <p className="text-xs font-semibold text-[#0F172A]">No Life Areas yet</p>
+                  <p className="text-[11px] text-[#64748B]">Click "+ Add" to create your first Life Area.</p>
+                </div>
+              ) : (
+                lifeAreas.map((la) => (
+                  <LifeAreaCard
+                    key={la.id}
+                    lifeArea={la}
+                    isSelected={la.id === selectedLifeAreaId}
+                    onSelect={setSelectedLifeAreaId}
+                    onRename={(id, newName) => updateLifeArea(id, { name: newName })}
+                    onDelete={deleteLifeArea}
+                    goalCount={goals.filter((g) => g.lifeAreaId === la.id).length}
+                  />
+                ))
+              )}
             </div>
           </Card>
         </div>
@@ -146,7 +153,9 @@ export const GoalsPage = () => {
                 </Button>
               }
             />
-            {filteredGoals.length === 0 ? (
+            {!selectedLifeArea ? (
+              <p className="text-xs text-slate-400 p-4 text-center">Create a Life Area first.</p>
+            ) : filteredGoals.length === 0 ? (
               <p className="text-xs text-slate-400 p-4 text-center">No goals in this Life Area.</p>
             ) : (
               <div className="space-y-2.5">
@@ -179,7 +188,9 @@ export const GoalsPage = () => {
                 </Button>
               }
             />
-            {filteredTemplates.length === 0 ? (
+            {!selectedGoal ? (
+              <p className="text-xs text-slate-400 p-4 text-center">Select or create a Goal first.</p>
+            ) : filteredTemplates.length === 0 ? (
               <p className="text-xs text-slate-400 p-4 text-center">No task templates for this goal.</p>
             ) : (
               <div className="space-y-2.5">
@@ -253,17 +264,24 @@ export const GoalsPage = () => {
               }
             />
             <div className="space-y-2.5">
-              {lifeAreas.map((la) => (
-                <LifeAreaCard
-                  key={la.id}
-                  lifeArea={la}
-                  isSelected={la.id === selectedLifeAreaId}
-                  onSelect={handleSelectAreaMobile}
-                  onRename={(id, newName) => updateLifeArea(id, { name: newName })}
-                  onDelete={deleteLifeArea}
-                  goalCount={goals.filter((g) => g.lifeAreaId === la.id).length}
-                />
-              ))}
+              {lifeAreas.length === 0 ? (
+                <div className="p-4 text-center bg-slate-50/60 border border-dashed border-slate-200 rounded-xl space-y-1">
+                  <p className="text-xs font-semibold text-[#0F172A]">No Life Areas yet</p>
+                  <p className="text-[11px] text-[#64748B]">Click "+ Add" to create your first Life Area.</p>
+                </div>
+              ) : (
+                lifeAreas.map((la) => (
+                  <LifeAreaCard
+                    key={la.id}
+                    lifeArea={la}
+                    isSelected={la.id === selectedLifeAreaId}
+                    onSelect={handleSelectAreaMobile}
+                    onRename={(id, newName) => updateLifeArea(id, { name: newName })}
+                    onDelete={deleteLifeArea}
+                    goalCount={goals.filter((g) => g.lifeAreaId === la.id).length}
+                  />
+                ))
+              )}
             </div>
           </Card>
         )}
@@ -279,7 +297,9 @@ export const GoalsPage = () => {
                 </Button>
               }
             />
-            {filteredGoals.length === 0 ? (
+            {!selectedLifeArea ? (
+              <p className="text-xs text-slate-400 p-4 text-center">Create a Life Area first.</p>
+            ) : filteredGoals.length === 0 ? (
               <p className="text-xs text-slate-400 p-4 text-center">No goals in this Life Area.</p>
             ) : (
               <div className="space-y-2.5">
@@ -311,7 +331,9 @@ export const GoalsPage = () => {
                 </Button>
               }
             />
-            {filteredTemplates.length === 0 ? (
+            {!selectedGoal ? (
+              <p className="text-xs text-slate-400 p-4 text-center">Select or create a Goal first.</p>
+            ) : filteredTemplates.length === 0 ? (
               <p className="text-xs text-slate-400 p-4 text-center">No task templates for this goal.</p>
             ) : (
               <div className="space-y-2.5">

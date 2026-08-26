@@ -16,7 +16,7 @@ export const templateService = {
   async syncFromCloud() {
     try {
       const remoteTemplates = await apiService.getTemplates();
-      if (Array.isArray(remoteTemplates) && remoteTemplates.length > 0) {
+      if (Array.isArray(remoteTemplates)) {
         const formatted = remoteTemplates.map((t) => ({
           id: t.id,
           goalId: t.goal_id,
@@ -102,4 +102,3 @@ export const templateService = {
     return this.update(id, { active: !target.active });
   },
 };
-

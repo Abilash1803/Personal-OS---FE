@@ -15,7 +15,7 @@ export const goalService = {
   async syncFromCloud() {
     try {
       const remoteGoals = await apiService.getGoals();
-      if (Array.isArray(remoteGoals) && remoteGoals.length > 0) {
+      if (Array.isArray(remoteGoals)) {
         const formatted = remoteGoals.map((g) => ({
           id: g.id,
           lifeAreaId: g.life_area_id,
@@ -92,4 +92,3 @@ export const goalService = {
     return this.update(id, { isActive: !target.isActive });
   },
 };
-
