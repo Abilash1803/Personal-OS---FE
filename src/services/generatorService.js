@@ -143,4 +143,20 @@ export const generatorService = {
 
     return this.getResolvedTasksForDate(dateStr);
   },
+
+  /**
+   * Deletes a daily task from local storage and Supabase database
+   */
+  deleteTask(taskId, dateStr = getTodayISODate()) {
+    const existingTasks = storageService.getCollection('DAILY_TASKS');
+    const updated = existingTasks.filter((t) => t.id !== taskId);
+    storageService.setCollection('DAILY_TASKS', updated);
+
+    // Live Supabase Cloud Deletion
+    apiService.deleteDailyTask(taskId).catch((err) => {
+      console.warn('Supabase daily task delete warning:', err);
+    });
+
+    return this.getResolvedTasksForDate(dateStr);
+  },
 };

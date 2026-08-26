@@ -33,6 +33,11 @@ export const useDailyGenerator = (selectedDate = getTodayISODate()) => {
     setTasks(updated);
   }, [selectedDate]);
 
+  const deleteTask = useCallback((taskId) => {
+    const updated = generatorService.deleteTask(taskId, selectedDate);
+    setTasks(updated);
+  }, [selectedDate]);
+
   const updateNote = useCallback((newNote) => {
     setIsSavingNote(true);
     setNote(newNote);
@@ -56,6 +61,7 @@ export const useDailyGenerator = (selectedDate = getTodayISODate()) => {
     note,
     isSavingNote,
     updateTaskStatus,
+    deleteTask,
     updateNote,
     refreshTasks,
   };

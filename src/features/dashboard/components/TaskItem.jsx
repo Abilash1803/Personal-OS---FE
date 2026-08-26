@@ -7,7 +7,7 @@ import { TASK_STATUSES } from '../../../utils/taskUtils';
 import { useActiveSession } from '../../../hooks/useActiveSession';
 import { ChevronDown, CheckCircle2, Clock, AlertTriangle, Play, Zap } from 'lucide-react';
 
-export const TaskItem = ({ task, onStatusChange }) => {
+export const TaskItem = ({ task, onStatusChange, onDeleteTask }) => {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { activeTaskId, isRunning } = useActiveSession();
@@ -139,6 +139,7 @@ export const TaskItem = ({ task, onStatusChange }) => {
               onClose={() => setIsDropdownOpen(false)}
               currentStatus={task.status}
               onSelectStatus={(newStatus) => onStatusChange(task.id, newStatus)}
+              onDeleteTask={onDeleteTask}
             />
           </div>
         </div>

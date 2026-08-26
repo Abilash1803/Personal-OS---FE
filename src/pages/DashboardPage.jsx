@@ -22,6 +22,7 @@ export const DashboardPage = () => {
     note,
     isSavingNote,
     updateTaskStatus,
+    deleteTask,
     updateNote,
   } = useDailyGenerator(selectedDate);
 
@@ -71,7 +72,12 @@ export const DashboardPage = () => {
         {/* Left Column: Progress, Tasks, & Journal Reflection (7 cols) */}
         <div className="lg:col-span-7 space-y-6">
           <TodayProgressCard metrics={metrics} date={selectedDate} />
-          <TodayTasksCard tasks={tasks} onStatusChange={updateTaskStatus} date={selectedDate} />
+          <TodayTasksCard
+            tasks={tasks}
+            onStatusChange={updateTaskStatus}
+            onDeleteTask={deleteTask}
+            date={selectedDate}
+          />
           <TodayNoteCard
             note={note}
             onNoteChange={updateNote}

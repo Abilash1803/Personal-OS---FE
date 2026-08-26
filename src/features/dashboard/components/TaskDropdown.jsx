@@ -2,9 +2,9 @@ import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TASK_STATUSES } from '../../../utils/taskUtils';
 import { dropdownVariant } from '../../../utils/animationVariants';
-import { Check, Clock, AlertTriangle, Circle } from 'lucide-react';
+import { Check, Clock, AlertTriangle, Circle, Trash2 } from 'lucide-react';
 
-export const TaskDropdown = ({ isOpen, onClose, currentStatus, onSelectStatus }) => {
+export const TaskDropdown = ({ isOpen, onClose, currentStatus, onSelectStatus, onDeleteTask }) => {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -77,6 +77,24 @@ export const TaskDropdown = ({ isOpen, onClose, currentStatus, onSelectStatus })
               </button>
             );
           })}
+
+          {onDeleteTask && (
+            <div className="pt-1 mt-1 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => {
+                  onDeleteTask();
+                  onClose();
+                }}
+                className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Delete Task</span>
+                </div>
+              </button>
+            </div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>

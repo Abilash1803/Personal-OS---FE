@@ -6,7 +6,7 @@ import { TASK_STATUSES } from '../../../utils/taskUtils';
 import { getTodayISODate } from '../../../utils/dateUtils';
 import { CheckSquare } from 'lucide-react';
 
-export const TodayTasksCard = ({ tasks, onStatusChange, date = getTodayISODate() }) => {
+export const TodayTasksCard = ({ tasks, onStatusChange, onDeleteTask, date = getTodayISODate() }) => {
   const todayStr = getTodayISODate();
   const isToday = date === todayStr;
   const allCompleted = tasks.length > 0 && tasks.every((t) => t.status === TASK_STATUSES.COMPLETED);
@@ -41,7 +41,12 @@ export const TodayTasksCard = ({ tasks, onStatusChange, date = getTodayISODate()
       ) : (
         <div className="flex flex-col gap-2.5">
           {tasks.map((task) => (
-            <TaskItem key={task.id} task={task} onStatusChange={onStatusChange} />
+            <TaskItem
+              key={task.id}
+              task={task}
+              onStatusChange={onStatusChange}
+              onDeleteTask={onDeleteTask ? () => onDeleteTask(task.id) : undefined}
+            />
           ))}
         </div>
       )}
