@@ -4,6 +4,7 @@ import { SectionHeader } from '../components/ui/SectionHeader';
 import { usePlanner } from '../hooks/usePlanner';
 import { useCalendar } from '../hooks/useCalendar';
 import { usePlannerNotes } from '../hooks/usePlannerNotes';
+import { useToast } from '../hooks/useToast';
 import { MiniCalendar } from '../features/planner/components/MiniCalendar';
 import { AgendaItem } from '../features/planner/components/AgendaItem';
 import { QuickAdd } from '../features/planner/components/QuickAdd';
@@ -43,6 +44,13 @@ export const PlannerPage = () => {
 
   const agendaItems = getAgendaForDate(selectedDate);
   const upcomingItems = getUpcomingEvents(selectedDate, 7);
+
+  const { addToast } = useToast();
+
+  const handleDeleteEvent = (id) => {
+    deleteEvent(id);
+    addToast('Planner event deleted', 'info');
+  };
 
   const formattedSelectedDate = useMemo(() => {
     if (!selectedDate) return '';
@@ -136,7 +144,7 @@ export const PlannerPage = () => {
                     key={item.id}
                     item={item}
                     onToggleCompleted={toggleEventCompleted}
-                    onDelete={deleteEvent}
+                    onDelete={handleDeleteEvent}
                   />
                 ))}
               </div>

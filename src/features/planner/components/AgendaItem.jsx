@@ -5,6 +5,13 @@ import { Clock, CheckCircle2, Circle, Target, Trash2 } from 'lucide-react';
 export const AgendaItem = ({ item, onToggleCompleted, onDelete }) => {
   const isCompleted = item.completed;
 
+  const handleDelete = (e) => {
+    e.stopPropagation();
+    if (onDelete) {
+      onDelete(item.id);
+    }
+  };
+
   return (
     <motion.div
       layout
@@ -14,7 +21,7 @@ export const AgendaItem = ({ item, onToggleCompleted, onDelete }) => {
         isCompleted ? 'opacity-60 bg-slate-50/60' : ''
       }`}
     >
-      <div className="flex items-center gap-3 min-w-0">
+      <div className="flex items-center gap-3 min-w-0 flex-1">
         {/* Toggle Checkbox */}
         <button
           type="button"
@@ -33,7 +40,7 @@ export const AgendaItem = ({ item, onToggleCompleted, onDelete }) => {
         {item.time ? (
           <div className="flex items-center gap-1 text-xs font-bold text-blue-600 bg-blue-50/80 px-2.5 py-1 rounded-lg border border-blue-100 shrink-0">
             <Clock className="w-3.5 h-3.5" />
-            <span>{item.displayTime}</span>
+            <span>{item.displayTime || item.time}</span>
           </div>
         ) : (
           <div className="text-[11px] font-semibold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200 shrink-0">
@@ -42,8 +49,8 @@ export const AgendaItem = ({ item, onToggleCompleted, onDelete }) => {
         )}
 
         {/* Title & Metadata */}
-        <div className="min-w-0">
-          <div className="flex items-center gap-2">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2 flex-wrap">
             <span
               className={`text-sm font-semibold tracking-tight truncate ${
                 isCompleted ? 'line-through text-slate-400' : 'text-[#0F172A]'
@@ -54,6 +61,10 @@ export const AgendaItem = ({ item, onToggleCompleted, onDelete }) => {
             <EventBadge type={item.type} />
           </div>
 
+          {item.description && (
+            <p className="text-[11px] text-[#64748B] truncate mt-0.5">{item.description}</p>
+          )}
+
           {item.category && (
             <div className="flex items-center gap-1 text-[11px] text-[#64748B] mt-0.5">
               <Target className="w-3 h-3 text-slate-400" />
@@ -63,13 +74,14 @@ export const AgendaItem = ({ item, onToggleCompleted, onDelete }) => {
         </div>
       </div>
 
-      {/* Delete button (for planner events) */}
-      {onDelete && item.originalType === 'EVENT' && (
+      {/* Delete button (accessible on both mobile & desktop) */}
+      {onDelete && (
         <button
           type="button"
-          onClick={() => onDelete(item.id)}
-          className="opacity-0 group-hover:opacity-100 p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all shrink-0"
-          title="Delete Event"
+          onClick={handleDelete}
+          className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all shrink-0 opacity-70 hover:opacity-100 focus:opacity-100"
+          title="Delete Entry"
+          aria-label="Delete Entry"
         >
           <Trash2 className="w-4 h-4" />
         </button>
