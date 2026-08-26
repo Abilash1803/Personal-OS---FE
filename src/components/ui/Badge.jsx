@@ -33,10 +33,10 @@ export const Badge = ({ status, className = '' }) => {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.2 }}
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-full border ${getBadgeStyle()} ${className}`}
+      className={`inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 sm:py-1 text-[11px] sm:text-xs font-semibold rounded-full border whitespace-nowrap shrink-0 ${getBadgeStyle()} ${className}`}
     >
-      <span className={`w-1.5 h-1.5 rounded-full ${getBadgeDot()}`} />
-      {status}
+      <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${getBadgeDot()}`} />
+      <span className="whitespace-nowrap">{status}</span>
     </motion.span>
   );
 };
