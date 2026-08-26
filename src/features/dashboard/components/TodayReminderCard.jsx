@@ -6,10 +6,11 @@ import { useAgenda } from '../../../hooks/useAgenda';
 import { getTodayISODate } from '../../../utils/dateUtils';
 import { Clock, ArrowRight, CheckCircle2, Circle } from 'lucide-react';
 
-export const TodayReminderCard = () => {
+export const TodayReminderCard = ({ date = getTodayISODate() }) => {
   const navigate = useNavigate();
   const todayStr = getTodayISODate();
-  const { agendaItems, toggleItemCompletion } = useAgenda(todayStr);
+  const isToday = date === todayStr;
+  const { agendaItems, toggleItemCompletion } = useAgenda(date);
 
   const hasItems = agendaItems && agendaItems.length > 0;
 
@@ -19,8 +20,8 @@ export const TodayReminderCard = () => {
         <SectionHeader
           icon={Clock}
           iconBg="bg-[#2563EB]/10 text-[#2563EB] border-blue-200"
-          title="Today's Agenda"
-          subtitle="Combined tasks & scheduled timeline"
+          title={isToday ? "Today's Agenda" : "Day Agenda"}
+          subtitle={isToday ? "Combined tasks & scheduled timeline" : `Scheduled timeline for ${date}`}
           rightAction={
             hasItems && (
               <span className="text-[11px] font-semibold px-2.5 py-0.5 bg-blue-50 text-[#2563EB] rounded-full border border-blue-200/60">

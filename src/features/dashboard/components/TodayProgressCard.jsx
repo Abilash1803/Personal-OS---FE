@@ -3,16 +3,20 @@ import { ProgressBar } from '../../../components/ui/ProgressBar';
 import { SectionHeader } from '../../../components/ui/SectionHeader';
 import { CheckCircle2, TrendingUp, Clock, AlertTriangle } from 'lucide-react';
 
-export const TodayProgressCard = ({ metrics }) => {
+import { getTodayISODate } from '../../../utils/dateUtils';
+
+export const TodayProgressCard = ({ metrics, date = getTodayISODate() }) => {
   const { total, completedCount, partiallyCount, missedCount, percentage } = metrics;
+  const todayStr = getTodayISODate();
+  const isToday = date === todayStr;
 
   return (
     <Card hoverEffect={true} className="relative overflow-hidden flex flex-col justify-between">
       <div>
         <SectionHeader
           icon={CheckCircle2}
-          title="Today's Progress"
-          subtitle="Daily task completion overview"
+          title={isToday ? "Today's Progress" : "Day Progress"}
+          subtitle={isToday ? "Daily task completion overview" : `Task completion overview for ${date}`}
           rightAction={
             <div className="flex items-baseline gap-1 text-right bg-blue-50/80 border border-blue-100 px-3 py-1 rounded-xl">
               <span className="text-xl font-bold text-[#2563EB]">{percentage}%</span>

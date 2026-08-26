@@ -3,16 +3,20 @@ import { SectionHeader } from '../../../components/ui/SectionHeader';
 import { StickyNote, Check, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export const TodayNoteCard = ({ note, onNoteChange, isSaving }) => {
-  const maxLength = 300;
-  const currentLength = note.length;
+import { getTodayISODate } from '../../../utils/dateUtils';
+
+export const TodayNoteCard = ({ note = '', onNoteChange, isSaving, date = getTodayISODate() }) => {
+  const maxLength = 500;
+  const currentLength = (note || '').length;
+  const todayStr = getTodayISODate();
+  const isToday = date === todayStr;
 
   return (
     <Card hoverEffect={false} className="flex flex-col gap-4">
       <SectionHeader
         icon={StickyNote}
-        title="How was your day?"
-        subtitle="Quick scratchpad for thoughts & reflections"
+        title={isToday ? "How was your day?" : "Daily Journal & Thoughts"}
+        subtitle={isToday ? "Quick scratchpad for thoughts & reflections" : `Journal entry for ${date}`}
         rightAction={
           <div className="h-7 flex items-center">
             <AnimatePresence mode="wait">
@@ -51,7 +55,7 @@ export const TodayNoteCard = ({ note, onNoteChange, isSaving }) => {
           value={note}
           maxLength={maxLength}
           onChange={(e) => onNoteChange(e.target.value)}
-          placeholder="Write two or three lines about today..."
+          placeholder={isToday ? "Write two or three lines about today..." : `Write thoughts or notes for ${date}...`}
           className="w-full h-32 p-3.5 bg-slate-50/80 border border-[#E2E8F0] rounded-xl text-sm text-[#0F172A] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/60 focus:bg-white resize-none transition-all duration-150"
           aria-label="Daily note textarea"
         />

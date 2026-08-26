@@ -3,17 +3,20 @@ import { TaskItem } from './TaskItem';
 import { SectionHeader } from '../../../components/ui/SectionHeader';
 import { EmptyState } from '../../../components/ui/EmptyState';
 import { TASK_STATUSES } from '../../../utils/taskUtils';
+import { getTodayISODate } from '../../../utils/dateUtils';
 import { CheckSquare } from 'lucide-react';
 
-export const TodayTasksCard = ({ tasks, onStatusChange }) => {
+export const TodayTasksCard = ({ tasks, onStatusChange, date = getTodayISODate() }) => {
+  const todayStr = getTodayISODate();
+  const isToday = date === todayStr;
   const allCompleted = tasks.length > 0 && tasks.every((t) => t.status === TASK_STATUSES.COMPLETED);
 
   return (
     <Card hoverEffect={false} className="relative z-10 flex flex-col gap-4 overflow-visible">
       <SectionHeader
         icon={CheckSquare}
-        title="Today's Tasks"
-        subtitle="Core action items for today"
+        title={isToday ? "Today's Tasks" : "Day Tasks"}
+        subtitle={isToday ? "Core action items for today" : `Action items for ${date}`}
         rightAction={
           <span className="text-xs font-semibold px-2.5 py-1 bg-slate-100 text-[#0F172A] rounded-full border border-slate-200">
             {tasks.length} Tasks
@@ -21,11 +24,18 @@ export const TodayTasksCard = ({ tasks, onStatusChange }) => {
         }
       />
 
-      {allCompleted ? (
+      {tasks.length === 0 ? (
+        <EmptyState
+          emoji="📝"
+          title="No tasks recorded"
+          subtitle={isToday ? "No active tasks generated for today yet." : `No tasks recorded for ${date}.`}
+          className="py-10"
+        />
+      ) : allCompleted ? (
         <EmptyState
           emoji="🎉"
           title="Everything completed!"
-          subtitle="All daily goals achieved. Enjoy your evening."
+          subtitle={isToday ? "All daily goals achieved. Enjoy your evening." : `All goals for ${date} were completed.`}
           className="py-10"
         />
       ) : (

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useDailyGenerator } from '../hooks/useDailyGenerator';
 import { useProgress } from '../hooks/useProgress';
+import { getTodayISODate } from '../utils/dateUtils';
 import { PageContainer } from '../components/ui/PageContainer';
 import { GreetingHeader } from '../features/dashboard/components/GreetingHeader';
+import { DashboardDateNav } from '../features/dashboard/components/DashboardDateNav';
 import { BackupNotice } from '../features/dashboard/components/BackupNotice';
 import { TodayProgressCard } from '../features/dashboard/components/TodayProgressCard';
 import { TodayTasksCard } from '../features/dashboard/components/TodayTasksCard';
@@ -13,13 +15,15 @@ import { TodayReviewCard } from '../features/dashboard/components/TodayReviewCar
 import { SkeletonCard, SkeletonTaskList } from '../components/ui/SkeletonLoader';
 
 export const DashboardPage = () => {
+  const [selectedDate, setSelectedDate] = useState(() => getTodayISODate());
+
   const {
     tasks,
     note,
     isSavingNote,
     updateTaskStatus,
     updateNote,
-  } = useDailyGenerator();
+  } = useDailyGenerator(selectedDate);
 
   const { metrics } = useProgress(tasks);
 
@@ -53,26 +57,33 @@ export const DashboardPage = () => {
       {/* Greeting Header */}
       <GreetingHeader userName="Abilash" />
 
+      {/* Interactive Date Navigator & Horizontal Day Strip */}
+      <DashboardDateNav
+        selectedDate={selectedDate}
+        onSelectDate={setSelectedDate}
+      />
+
       {/* Non-blocking Backup Notice if never backed up */}
       <BackupNotice />
 
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: Progress, Tasks, & Today Notes (7 cols) */}
+        {/* Left Column: Progress, Tasks, & Journal Reflection (7 cols) */}
         <div className="lg:col-span-7 space-y-6">
-          <TodayProgressCard metrics={metrics} />
-          <TodayTasksCard tasks={tasks} onStatusChange={updateTaskStatus} />
+          <TodayProgressCard metrics={metrics} date={selectedDate} />
+          <TodayTasksCard tasks={tasks} onStatusChange={updateTaskStatus} date={selectedDate} />
           <TodayNoteCard
             note={note}
             onNoteChange={updateNote}
             isSaving={isSavingNote}
+            date={selectedDate}
           />
         </div>
 
         {/* Right Column: Review, Reminders Timeline, & Recent Activity (5 cols) */}
         <div className="lg:col-span-5 space-y-6">
-          <TodayReviewCard />
-          <TodayReminderCard />
+          <TodayReviewCard date={selectedDate} />
+          <TodayReminderCard date={selectedDate} />
           <RecentActivityCard />
         </div>
       </div>

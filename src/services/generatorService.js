@@ -2,6 +2,7 @@ import { storageService } from './storageService.js';
 import { goalService } from './goalService.js';
 import { templateService } from './templateService.js';
 import { lifeAreaService } from './lifeAreaService.js';
+import { apiService } from './apiService.js';
 import { getTodayISODate } from '../utils/dateUtils.js';
 import { TASK_STATUSES } from '../utils/taskUtils.js';
 import { generateUUID } from '../utils/idUtils.js';
@@ -49,6 +50,9 @@ export const generatorService = {
         };
         todayTasks.push(newTask);
         modified = true;
+
+        // Sync to Supabase
+        apiService.createDailyTask(newTask).catch(() => {});
       }
     });
 
@@ -63,10 +67,22 @@ export const generatorService = {
   },
 
   /**
-   * Resolves today's generated daily tasks with template, goal, and life area metadata
+   * Gets tasks for a specific date (today or past/future date)
    */
-  getResolvedTodayTasks() {
-    const dailyTasks = this.generateTodayTasks();
+  getTasksForDate(dateStr = getTodayISODate()) {
+    const today = getTodayISODate();
+    if (dateStr === today) {
+      return this.generateTodayTasks();
+    }
+    const existingTasks = storageService.getCollection('DAILY_TASKS');
+    return existingTasks.filter((t) => t.date === dateStr);
+  },
+
+  /**
+   * Resolves daily tasks for a given date with template, goal, and life area metadata
+   */
+  getResolvedTasksForDate(dateStr = getTodayISODate()) {
+    const dailyTasks = this.getTasksForDate(dateStr);
     const templates = templateService.getAll();
     const goals = goalService.getAll();
     const lifeAreas = lifeAreaService.getAll();
@@ -94,22 +110,37 @@ export const generatorService = {
     });
   },
 
+  getResolvedTodayTasks() {
+    return this.getResolvedTasksForDate(getTodayISODate());
+  },
+
   /**
-   * Updates status of a generated daily task
+   * Updates status of a daily task
    */
-  updateTaskStatus(taskId, status) {
+  updateTaskStatus(taskId, status, dateStr = getTodayISODate()) {
     const existingTasks = storageService.getCollection('DAILY_TASKS');
+    let targetTask = null;
     const updated = existingTasks.map((t) => {
       if (t.id === taskId) {
-        return {
+        targetTask = {
           ...t,
           status,
           completedAt: status === TASK_STATUSES.COMPLETED ? new Date().toISOString() : t.completedAt,
         };
+        return targetTask;
       }
       return t;
     });
     storageService.setCollection('DAILY_TASKS', updated);
-    return this.getResolvedTodayTasks();
+
+    // Sync to Supabase
+    if (targetTask) {
+      apiService.updateDailyTask(taskId, {
+        status: targetTask.status,
+        completed_at: targetTask.completedAt,
+      }).catch(() => {});
+    }
+
+    return this.getResolvedTasksForDate(dateStr);
   },
 };

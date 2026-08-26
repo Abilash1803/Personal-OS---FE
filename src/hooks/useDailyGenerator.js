@@ -1,20 +1,20 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { generatorService } from '../services/generatorService';
-import { storageService } from '../services/storageService';
+import { reflectionService } from '../services/reflectionService';
+import { apiService } from '../services/apiService';
+import { getTodayISODate } from '../utils/dateUtils';
 
-export const useDailyGenerator = () => {
-  const [tasks, setTasks] = useState(() => generatorService.getResolvedTodayTasks());
-  const [note, setNote] = useState(() => storageService.getItem('personal_os_note') || '');
+export const useDailyGenerator = (selectedDate = getTodayISODate()) => {
+  const [tasks, setTasks] = useState(() => generatorService.getResolvedTasksForDate(selectedDate));
+  const [note, setNote] = useState(() => reflectionService.getByDate(selectedDate) || '');
   const [isSavingNote, setIsSavingNote] = useState(false);
   const debounceTimerRef = useRef(null);
 
-  const refreshTodayTasks = useCallback(() => {
-    setTasks(generatorService.getResolvedTodayTasks());
-  }, []);
-
+  // Sync tasks and journal note whenever selected date changes
   useEffect(() => {
-    refreshTodayTasks();
-  }, [refreshTodayTasks]);
+    setTasks(generatorService.getResolvedTasksForDate(selectedDate));
+    setNote(reflectionService.getByDate(selectedDate) || '');
+  }, [selectedDate]);
 
   useEffect(() => {
     return () => {
@@ -24,24 +24,32 @@ export const useDailyGenerator = () => {
     };
   }, []);
 
+  const refreshTasks = useCallback(() => {
+    setTasks(generatorService.getResolvedTasksForDate(selectedDate));
+  }, [selectedDate]);
+
   const updateTaskStatus = useCallback((taskId, status) => {
-    const updated = generatorService.updateTaskStatus(taskId, status);
+    const updated = generatorService.updateTaskStatus(taskId, status, selectedDate);
     setTasks(updated);
-  }, []);
+  }, [selectedDate]);
 
   const updateNote = useCallback((newNote) => {
     setIsSavingNote(true);
     setNote(newNote);
-    storageService.setItem('personal_os_note', newNote);
+    
+    // Save to daily reflections storage
+    reflectionService.saveReflection(selectedDate, newNote);
 
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
     }
 
     debounceTimerRef.current = setTimeout(() => {
+      // Cloud sync to Supabase
+      apiService.saveReflection(selectedDate, newNote).catch(() => {});
       setIsSavingNote(false);
     }, 400);
-  }, []);
+  }, [selectedDate]);
 
   return {
     tasks,
@@ -49,7 +57,6 @@ export const useDailyGenerator = () => {
     isSavingNote,
     updateTaskStatus,
     updateNote,
-    refreshTodayTasks,
+    refreshTasks,
   };
 };
-

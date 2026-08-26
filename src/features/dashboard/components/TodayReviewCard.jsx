@@ -5,10 +5,11 @@ import { useDailyReview } from '../../../hooks/useDailyReview';
 import { getTodayISODate } from '../../../utils/dateUtils';
 import { Award, ArrowRight } from 'lucide-react';
 
-export const TodayReviewCard = () => {
+export const TodayReviewCard = ({ date = getTodayISODate() }) => {
   const navigate = useNavigate();
   const todayStr = getTodayISODate();
-  const review = useDailyReview(todayStr);
+  const isToday = date === todayStr;
+  const review = useDailyReview(date);
 
   return (
     <Card hoverEffect={true} className="flex flex-col justify-between">
@@ -16,8 +17,8 @@ export const TodayReviewCard = () => {
         <SectionHeader
           icon={Award}
           iconBg="bg-blue-50 text-blue-600 border-blue-100"
-          title="Today's Review"
-          subtitle="Daily performance evaluation"
+          title={isToday ? "Today's Review" : "Day Review"}
+          subtitle={isToday ? "Daily performance evaluation" : `Performance evaluation for ${date}`}
         />
 
         {review && review.hasData ? (
